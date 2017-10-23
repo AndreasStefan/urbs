@@ -3,5 +3,6 @@
 result/*
 results/*
 doc/_build/*
-*.xlsx
 .idea/
+result/
+urbs/__pycache__/
