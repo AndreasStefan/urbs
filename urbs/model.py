@@ -52,6 +52,9 @@ def create_model(data, timesteps=None, dt=1, dual=False):
     m.r_in_dict = m.r_in.to_dict()
     m.r_out_dict = m.r_out.to_dict()
 
+    # determine proportional processes
+    m.pro_prop = m.process_commodity.query('proportional == 1')
+
     # process areas
     m.proc_area = m.process['area-per-cap']
     m.sit_area = m.site['area']
@@ -263,6 +266,16 @@ def create_model(data, timesteps=None, dt=1, dual=False):
         initialize=commodity_subset(m.com_tuples, 'Env'),
         doc='Commodities that (might) have a maximum creation limit')
 
+    # proportional process type subsets
+    m.pro_proportional_tuples = pyomo.Set(
+        within=m.sit * m.pro * m.com,
+        initialize=[(site, process, commodity)
+                    for (site, process) in m.pro_tuples
+                    for (pro, commodity, _) in m.pro_prop.index
+                    if process == pro],
+        doc='Process outputs that must follow the demand, e.g.'
+            '(Mid,Domestic heating,Heat)')
+
     # Parameters
 
     # weight = length of year (hours) / length of simulation (hours)
@@ -324,7 +337,11 @@ def create_model(data, timesteps=None, dt=1, dual=False):
         m.tm, m.pro_tuples, m.com,
         within=pyomo.NonNegativeReals,
         doc='Power flow out of process (MW) per timestep')
-
+    m.delta_pro = pyomo.Var(
+        m.pro_proportional_tuples,
+        within=pyomo.NonNegativeReals,
+        bounds=(0, 1),
+        doc='Fraction of demand that process output must meet (0 to 1)')
     m.cap_online = pyomo.Var(
         m.t, m.pro_partial_tuples,
         within=pyomo.NonNegativeReals,
@@ -467,6 +484,10 @@ def create_model(data, timesteps=None, dt=1, dual=False):
         m.pro_tuples,
         rule=res_process_capacity_rule,
         doc='process.cap-lo <= total process capacity <= process.cap-up')
+    m.res_proportional_process = pyomo.Constraint(
+        m.tm, m.pro_proportional_tuples,
+        rule=res_proportional_process_rule,
+        doc='process output must meet (variable, but constant) share of demand')
 
     m.res_area = pyomo.Constraint(
         m.sit,
@@ -925,6 +946,10 @@ def res_process_capacity_rule(m, sit, pro):
             m.cap_pro[sit, pro],
             m.process.loc[sit, pro]['cap-up'])
 
+def res_proportional_process_rule(m, tm, sit, pro, com):
+    return (m.e_pro_out[tm, sit, pro, com] ==
+            m.demand.loc[tm][sit, com] *
+            m.delta_pro[sit, pro, com])
 
 # used process area <= maximal process area
 def res_area_rule(m, sit):
