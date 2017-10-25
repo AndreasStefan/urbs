@@ -13,7 +13,10 @@ hdf5_file_name = 'result\mimo-example-20171023T1612\scenario_base.h5'
 
 prob = load(hdf5_file_name )
 
+consumed = get_entity(prob, 'e_pro_in')
+#get_timeseries(prob, 'Elec', 'Mid')
 
+#costs = get_entity(prob, 'costs')
 
 
 costs = get_entity(prob, 'costs')
