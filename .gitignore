@@ -6,3 +6,7 @@ doc/_build/*
 .idea/
 result/
 urbs/__pycache__/
+.ipynb_
+.ipynb_checkpoints/
+
+Untitled.ipynb
