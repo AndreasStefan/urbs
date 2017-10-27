@@ -20,3 +20,4 @@ consumed = get_entity(prob, 'e_pro_in')
 
 
 costs = get_entity(prob, 'costs')
+consumed.iloc[consumed.index.get_level_values('t') == 3501]
