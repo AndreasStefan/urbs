@@ -144,7 +144,7 @@ def run_scenario(input_file, timesteps, scenario, result_dir,
     return prob
 
 if __name__ == '__main__':
-    input_file = 'mimo-example.xlsx'
+    input_file = 'Augsburg.xlsx'
     result_name = os.path.splitext(input_file)[0]  # cut away file extension
     result_dir = prepare_result_directory(result_name)  # name + time stamp
     runme = 'runme.py'
@@ -160,15 +160,15 @@ if __name__ == '__main__':
 
     # plotting commodities/sites
     plot_tuples = [
-        ('North', 'Elec'),
-        ('Mid', 'Elec'),
-        ('South', 'Elec'),
-        (['North', 'Mid', 'South'], 'Elec')]
+        ('Augsburg', 'Elec'),
+        ('Augsburg', 'Nahwaerme'),
+        ('Augsburg', 'Waerme dezentral'),
+        ('Augsburg', 'HG W_PV')]
 
     # detailed reporting commodity/sites
     report_tuples = [
-        ('North', 'Elec'), ('Mid', 'Elec'), ('South', 'Elec'),
-        ('North', 'CO2'), ('Mid', 'CO2'), ('South', 'CO2')]
+        ('Augsburg', 'Elec'), ('Augsburg', 'Nahwaerme'), ('Augsburg', 'Waerme dezentral'),
+        ('Augsburg', 'CO2'), ('Augsburg', 'HG W_PV')]
 
     # plotting timesteps
     plot_periods = {
@@ -177,9 +177,8 @@ if __name__ == '__main__':
 
     # add or change plot colors
     my_colors = {
-        'South': (230, 200, 200),
-        'Mid': (200, 230, 200),
-        'North': (200, 200, 230)}
+        'Augsburg': (230, 200, 200),
+        }
     for country, color in my_colors.items():
         urbs.COLORS[country] = color
 
