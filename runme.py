@@ -125,7 +125,7 @@ def run_scenario(input_file, timesteps, scenario, result_dir,
     result = optim.solve(prob, tee=True)
 
     # save problem solution (and input data) to HDF5 file
-    urbs.save(prob, os.path.join(result_dir, '{}.h5'.format(sce)))
+    #urbs.save(prob, os.path.join(result_dir, '{}.h5'.format(sce)))
 
     # write report to spreadsheet
     urbs.report(
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (3500, 168)  # time step selection
+    (offset, length) = (3500, 1000)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites
@@ -189,7 +189,7 @@ if __name__ == '__main__':
         #scenario_co2_limit,
         #scenario_co2_tax_mid,
         #scenario_no_dsm,
-       # scenario_north_process_caps,
+        #scenario_north_process_caps,
         #scenario_all_together]
 
     for scenario in scenarios:
