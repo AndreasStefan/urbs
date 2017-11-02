@@ -9,8 +9,6 @@ from pyomo.opt.base import SolverFactory
 
 # SCENARIOS
 def scenario_base(data):
-    buy_sell_price = data['buy_sell_price']
-    demand=data['demand']
 
     return data
 
@@ -78,8 +76,8 @@ def setup_solver(optim, logfile='solver.log'):
         # reference with list of option names
         # http://www.gurobi.com/documentation/5.6/reference-manual/parameters
         optim.set_options("logfile={}".format(logfile))
-        # optim.set_options("timelimit=7200")  # seconds
-        # optim.set_options("mipgap=5e-4")  # default = 1e-4
+        optim.set_options("timelimit=7200")  # seconds
+        optim.set_options("mipgap=10e-4")  # default = 1e-4
     elif optim.name == 'glpk':
         # reference with list of options
         # execute 'glpsol --help'
@@ -157,7 +155,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (3500, 1000)  # time step selection
+    (offset, length) = (1, 20)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites
@@ -165,12 +163,17 @@ if __name__ == '__main__':
         ('Augsburg', 'Elec'),
         ('Augsburg', 'Nahwaerme'),
         ('Augsburg', 'Waerme dezentral'),
-        ('Augsburg', 'HG W_PV')]
+        ('Augsburg', 'HG W_PV'),
+        ('Augsburg', 'HG W_Solar'),
+        ('Augsburg', 'HG W_GWWP'),
+        ('Augsburg', 'HG S_PV'),
+        ('Augsburg', 'HG P2H_SP')
+        ]
 
     # detailed reporting commodity/sites
     report_tuples = [
         ('Augsburg', 'Elec'), ('Augsburg', 'Nahwaerme'), ('Augsburg', 'Waerme dezentral'),
-        ('Augsburg', 'CO2'), ('Augsburg', 'HG W_PV')]
+        ('Augsburg', 'CO2'), ('Augsburg', 'HG W_PV'),('Augsburg', 'HG W_GWWP'),('Augsburg', 'HG W_Solar'),('Augsburg', 'HG S_PV'),('Augsburg', 'HG P2H_SP')]
 
     # plotting timesteps
     plot_periods = {
