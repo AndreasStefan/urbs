@@ -9,7 +9,9 @@ from pyomo.opt.base import SolverFactory
 
 # SCENARIOS
 def scenario_base(data):
-    # do nothing
+    buy_sell_price = data['buy_sell_price']
+    demand=data['demand']
+
     return data
 
 
