@@ -1,11 +1,11 @@
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os
-from urbs.saveload import load
+from urbs.urbs.saveload import load
 
-from analyse import plot_cap
-from analyse import glob_result_files
-from analyse import get_most_recent_entry
+from urbs.analyse import plot_cap
+from urbs.analyse import glob_result_files
+from urbs.analyse import get_most_recent_entry
 
 
 
