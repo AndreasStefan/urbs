@@ -868,10 +868,10 @@ def def_process_output_rule(m, tm, sit, pro, co):
             m.tau_pro[tm, sit, pro] * m.r_out.loc[pro, co])
 
 
-# process input (for supim commodity) = process capacity * timeseries
+# process input (for supim commodity) <= process capacity * timeseries
 def def_intermittent_supply_rule(m, tm, sit, pro, coin):
     if coin in m.com_supim:
-        return (m.e_pro_in[tm, sit, pro, coin] ==
+        return (m.e_pro_in[tm, sit, pro, coin] <=
                 m.cap_pro[sit, pro] * m.supim.loc[tm][sit, coin])
     else:
         return pyomo.Constraint.Skip
