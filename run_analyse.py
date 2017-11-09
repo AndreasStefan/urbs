@@ -17,8 +17,8 @@ for hdf5_file_name in hdf5_file_names:
 
     prob = load(hdf5_file_name)
 
-    sit = 'Bayern'
-    to_drop = ['Slack H2', 'Slack powerplant', 'Slack traffic']
+    sit = 'Augsburg'
+    to_drop = []
     plot_sto = True
     plot_cpro = True
     xticks = 2
