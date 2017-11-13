@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import math
 import pyomo.environ
 import shutil
 import urbs
@@ -143,6 +144,152 @@ def run_scenario(input_file, timesteps, scenario, result_dir,
         figure_size=(24, 9))
     return prob
 
+
+
+def Wind(year):
+
+    inv_costs = (6.089e+11)*math.exp((year*(-0.006443)))
+    fix_costs = inv_costs*(2/100)
+
+    return inv_costs,fix_costs
+
+
+def PV_Freiflaeche(year):
+    inv_costs = ( 3.185e+24) * math.exp((year * (-0.021)))
+    fix_costs = inv_costs * (1.5 / 100)
+
+    return inv_costs, fix_costs
+
+def PV_Dach(year):
+    inv_costs = (4.432e+15) * math.exp((year * (-0.01092)))
+    fix_costs = inv_costs * (2 / 100)
+
+    return inv_costs, fix_costs
+
+def Laufwasser(year):
+    inv_costs = (2.17e+06) * math.exp((year * (0.0004661)))
+    fix_costs = inv_costs * (4.5 / 100)
+
+    return inv_costs, fix_costs
+
+def Gasturbine(year):
+    inv_costs = (9.088e+06) * math.exp((year * (-0.001092)))
+    fix_costs = inv_costs * (5.2 / 100)
+
+    return inv_costs, fix_costs
+
+def GuD(year):
+    inv_costs = (2.03e+06 ) * math.exp((year * (0)))
+    fix_costs = inv_costs * (5.2 / 100)
+
+    return inv_costs, fix_costs
+
+def Heizwerk(year):
+
+    inv_costs = (153400/0.94) * (year **(0))
+    fix_costs = inv_costs * (2 / 100)
+
+    return inv_costs, fix_costs
+
+def Biogas_KWK(year):
+    inv_costs = (1.358e+19) * math.exp((year * (-0.01437)))
+    fix_costs = inv_costs * (6.1 / 100)
+
+    return inv_costs, fix_costs
+
+
+def Biogas_Aufbereitung(year):
+    inv_costs = (1.458e+14) * math.exp((year * (-0.009123)))
+    fix_costs = inv_costs * (6 / 100)
+
+    return inv_costs, fix_costs
+
+def Abfall_KWK(year):
+    inv_costs = (3.993e+13) * math.exp((year * (-0.007803)))
+    fix_costs = inv_costs * (4.5/ 100)
+
+    return inv_costs, fix_costs
+
+def Solar_dez(year):
+    inv_costs = (300000) * math.exp((year * (0)))
+    fix_costs = inv_costs * (1.3/ 100)
+
+    return inv_costs, fix_costs
+
+def Solar_zentr(year):
+    inv_costs = (190000) * math.exp((year * (0)))
+    fix_costs = inv_costs * (1.4/ 100)
+
+    return inv_costs, fix_costs
+
+def Biomasse_KWK(year):
+    inv_costs = (4.911e+15) * math.exp((year * (-0.01056)))
+    fix_costs = inv_costs * (3.3/ 100)
+
+    return inv_costs, fix_costs
+
+def Oelkessel(year):
+
+    inv_costs = (863000) * (year **(0))
+    fix_costs = inv_costs * (1/ 100)
+
+    return inv_costs, fix_costs
+
+def Holzkessel(year):
+    inv_costs = (2.528e+11) * math.exp((year *(-0.006021)))
+    fix_costs = inv_costs * (2/ 100)
+
+    return inv_costs, fix_costs
+
+def Gaskessel(year):
+
+    inv_costs = (660000) * (year **(0))
+    fix_costs = inv_costs * (1/ 100)
+
+    return inv_costs, fix_costs
+
+def GWWP(year):
+    inv_costs = (1.218e+11) * math.exp((year * (-0.005767)))
+    fix_costs = inv_costs * (4/ 100)
+
+    return inv_costs, fix_costs
+
+def Batterie(year):
+
+    inv_costs_p = (3.47e+55) * math.exp((year * (-0.05709)))
+    fix_costs_p = inv_costs_p * (1.4/ 100)
+    inv_costs_e = (1.357e+49) * math.exp((year * (-0.04957)))
+
+
+    return inv_costs_p, fix_costs_p,inv_costs_e
+
+
+def Waermenetz(year):
+
+    inv_costs_p = (1.044e+09) * math.exp((year * (-0.00354)))
+    fix_costs_p = inv_costs_p * (3/ 100)
+
+    return inv_costs_p, fix_costs_p
+
+
+def Puffer_zentr(year):
+
+    inv_costs_p = (200000) * (year **(0))
+    fix_costs_p = inv_costs_p * (1/ 100)
+    inv_costs_e = (3869) * (year **(0))
+
+
+    return inv_costs_p, fix_costs_p,inv_costs_e
+
+def Puffer_dez(year):
+
+    inv_costs_p = (150000) * (year **(0))
+    fix_costs_p = inv_costs_p * (1/ 100)
+    inv_costs_e = (42992) * (year **(0))
+
+
+    return inv_costs_p, fix_costs_p,inv_costs_e
+
 if __name__ == '__main__':
     input_file = 'Augsburg.xlsx'
     result_name = os.path.splitext(input_file)[0]  # cut away file extension
@@ -202,3 +349,4 @@ if __name__ == '__main__':
                             plot_tuples=plot_tuples,
                             plot_periods=plot_periods,
                             report_tuples=report_tuples)
+
