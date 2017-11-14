@@ -245,9 +245,14 @@ def scenario_base(data):
 
 
 def scenario_2017(data):
+    global_prop = data['global_prop']
+    global_prop.loc['CO2 limit', 'value'] = 1000000
+
+
+
     year = 2017
     dif=0
-    file= 'result/Augsburg-20171114T1957/scenario_base.xlsx'
+    file= 'result/Augsburg-20171114T2323/scenario_base.xlsx'
 
 
     xls = pd.ExcelFile(file)  # read resultfile
@@ -784,7 +789,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (0, 2000)  # time step selection
+    (offset, length) = (0, 100)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites
@@ -827,8 +832,8 @@ if __name__ == '__main__':
 
     # select scenarios to be run
     scenarios = [
-        scenario_base]
-        #scenario_2017]
+        #scenario_base]
+        scenario_2017]
         #scenario_co2_limit,
         #scenario_co2_tax_mid,
         #scenario_no_dsm,
