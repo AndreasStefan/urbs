@@ -23,20 +23,20 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'Wind'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'PV (Freiflaeche)'), 'inst-cap'] = 0
-    pro.loc[('Augsburg', 'PV (Freiflaeche)'), 'cap-up'] = 0
+    pro.loc[('Augsburg', 'PV Freiflaeche'), 'inst-cap'] = 0
+    pro.loc[('Augsburg', 'PV Freiflaeche'), 'cap-up'] = 0
 
     inv_costs, fix_costs = PV_Freiflaeche(year=year)
-    pro.loc[('Augsburg', 'PV (Freiflaeche)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'PV (Freiflaeche)'), 'fix-cost'] = fix_costs
+    pro.loc[('Augsburg', 'PV Freiflaeche'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'PV Freiflaeche'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'PV (Dach)'), 'inst-cap'] = 19.961 #https://www.pro-e-augsburg.de/902.php
-    pro.loc[('Augsburg', 'PV (Dach)'), 'cap-up'] = 19.961
+    pro.loc[('Augsburg', 'PV Dach'), 'inst-cap'] = 19.961 #https://www.pro-e-augsburg.de/902.php
+    pro.loc[('Augsburg', 'PV Dach'), 'cap-up'] = 19.961
 
     inv_costs, fix_costs = PV_Dach(year=year)
-    pro.loc[('Augsburg', 'PV (Dach)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'PV (Dach)'), 'fix-cost'] = fix_costs
+    pro.loc[('Augsburg', 'PV Dach'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'PV Dach'), 'fix-cost'] = fix_costs
 
 
     pro.loc[('Augsburg', 'Laufwasser'), 'inst-cap'] = 15.961 #http://www.erneuerbare-energien.augsburg.de/index.php?id=31919
@@ -95,20 +95,20 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'Abfall KWK'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'Solar (dez.)'), 'inst-cap'] = 6 #http://www.erneuerbare-energien.augsburg.de/index.php?id=31991 Annahme: 500 W/m^2
-    pro.loc[('Augsburg', 'Solar (dez.)'), 'cap-up'] = 6
+    pro.loc[('Augsburg', 'Solar dez'), 'inst-cap'] = 6 #http://www.erneuerbare-energien.augsburg.de/index.php?id=31991 Annahme: 500 W/m^2
+    pro.loc[('Augsburg', 'Solar dez'), 'cap-up'] = 6
 
     inv_costs, fix_costs = Solar_dez(year=year)
-    pro.loc[('Augsburg', 'Solar (dez.)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'Solar (dez.)'), 'fix-cost'] = fix_costs
+    pro.loc[('Augsburg', 'Solar dez'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'Solar dez'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'Solar (zentr.)'), 'inst-cap'] = 0
-    pro.loc[('Augsburg', 'Solar (zentr.)'), 'cap-up'] = 0
+    pro.loc[('Augsburg', 'Solar zentr'), 'inst-cap'] = 0
+    pro.loc[('Augsburg', 'Solar zentr'), 'cap-up'] = 0
 
     inv_costs, fix_costs = Solar_zentr(year=year)
-    pro.loc[('Augsburg', 'Solar (zentr.)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'Solar (zentr.)'), 'fix-cost'] = fix_costs
+    pro.loc[('Augsburg', 'Solar zentr'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'Solar zentr'), 'fix-cost'] = fix_costs
 
 
     pro.loc[('Augsburg', 'Biomasse KWK'), 'inst-cap'] = 7.66 #https://www.kraftanlagen.com/projekte/biomasseheizkraftwerk-augsburg/
@@ -143,28 +143,28 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'Gaskessel'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'Gaskessel (PV)'), 'inst-cap'] = 0
-    pro.loc[('Augsburg', 'Gaskessel (PV)'), 'cap-up'] = 0
+    pro.loc[('Augsburg', 'Gaskessel PV'), 'inst-cap'] = 0
+    pro.loc[('Augsburg', 'Gaskessel PV'), 'cap-up'] = 0
 
     inv_costs, fix_costs = Gaskessel(year=year)
-    pro.loc[('Augsburg', 'Gaskessel (PV)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'Gaskessel (PV)'), 'fix-cost'] = fix_costs
+    pro.loc[('Augsburg', 'Gaskessel PV'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'Gaskessel PV'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'Gaskessel (GWWP)'), 'inst-cap'] = (4/0.7) #Deckungsgrad GWWP 70%
-    pro.loc[('Augsburg', 'Gaskessel (GWWP)'), 'cap-up'] = (4/0.7)
-
-    inv_costs, fix_costs = Gaskessel(year=year)
-    pro.loc[('Augsburg', 'Gaskessel (GWWP)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'Gaskessel (GWWP)'), 'fix-cost'] = fix_costs
-
-
-    pro.loc[('Augsburg', 'Gaskessel (Solar)'), 'inst-cap'] = (6/0.3) #Deckungsgrad GWWP 30%
-    pro.loc[('Augsburg', 'Gaskessel (Solar)'), 'cap-up'] = (6/0.3)
+    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'inst-cap'] = (4/0.7) #Deckungsgrad GWWP 70%
+    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'cap-up'] = (4/0.7)
 
     inv_costs, fix_costs = Gaskessel(year=year)
-    pro.loc[('Augsburg', 'Gaskessel (Solar)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'Gaskessel (Solar)'), 'fix-cost'] = fix_costs
+    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'fix-cost'] = fix_costs
+
+
+    pro.loc[('Augsburg', 'Gaskessel Solar'), 'inst-cap'] = (6/0.3) #Deckungsgrad GWWP 30%
+    pro.loc[('Augsburg', 'Gaskessel Solar'), 'cap-up'] = (6/0.3)
+
+    inv_costs, fix_costs = Gaskessel(year=year)
+    pro.loc[('Augsburg', 'Gaskessel Solar'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'Gaskessel Solar'), 'fix-cost'] = fix_costs
 
 
     pro.loc[('Augsburg', 'GWWP'), 'inst-cap'] = 4 #   323 Wasser-Wärmepumpen, Wasser-Wasser Wärmepumpen bei 12,5kW, Leistungszahl 4 http://www.erneuerbare-energien.augsburg.de/index.php?id=31977; http://www.geothermie-zentrum.de/fileadmin/media/geothermiezentrum/Projekte/WP-Studie/Abschlussbericht_WP-Marktstudie_Mar2010.pdfhttp://www.geothermie-zentrum.de/fileadmin/media/geothermiezentrum/Projekte/WP-Studie/Abschlussbericht_WP-Marktstudie_Mar2010.pdf
@@ -175,12 +175,17 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'GWWP'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'P2H (dez.)'), 'inst-cap'] = 0
-    pro.loc[('Augsburg', 'P2H (dez.)'), 'cap-up'] = 0
+    pro.loc[('Augsburg', 'P2H dez'), 'inst-cap'] = 0
+    pro.loc[('Augsburg', 'P2H dez'), 'cap-up'] = 0
 
     inv_costs, fix_costs = P2H_dez(year=year)
-    pro.loc[('Augsburg', 'P2H (dez.)'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'P2H (dez.)'), 'fix-cost'] = fix_costs
+    pro.loc[('Augsburg', 'P2H dez'), 'inv-cost'] = inv_costs
+    pro.loc[('Augsburg', 'P2H dez'), 'fix-cost'] = fix_costs
+
+
+    pro.loc[('Augsburg', 'P2H zentr'), 'inst-cap'] = 10
+    pro.loc[('Augsburg', 'P2H zentr'), 'cap-up'] = 10
+
 
     '''
     pro.loc[('Augsburg', 'Slack powerplant'), 'inst-cap'] = 0
@@ -190,7 +195,9 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'GWWP Waerme'), 'inst-cap'] = 0
     pro.loc[('Augsburg', 'Solar (dez.) Waerme'), 'inst-cap'] = 0
     pro.loc[('Augsburg', 'PV Einspeisung'), 'inst-cap'] = 0
-    pro.loc[('Augsburg', 'P2H (zentr.)'), 'inst-cap'] = 0
+    
+    
+    
     pro.loc[('Augsburg', 'P2H (zentr.) Waerme'), 'inst-cap'] = 0
 
     '''
@@ -198,14 +205,14 @@ def scenario_base(data):
 
     inv_costs_p, fix_costs_p, inv_costs_e = Puffer_dez(year=year)
 
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H (dez.)'), 'inv_costs_p'] = 0 # Kosten für Heizschwert bereits in Process P2H (dez.) und Gaskssel (PV)enthalten
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H (dez.)'), 'fix_costs_p'] = 0 # Kosten für Heizschwert bereits in Process P2H (dez.) und Gaskssel (PV)enthalten
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H (dez.)'), 'inv_costs_c'] = inv_costs_e
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'inv_costs_p'] = 0 # Kosten für Heizschwert bereits in Process P2H (dez.) und Gaskssel (PV)enthalten
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'fix_costs_p'] = 0 # Kosten für Heizschwert bereits in Process P2H (dez.) und Gaskssel (PV)enthalten
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'inv_costs_c'] = inv_costs_e
 
 
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar (dez.)'), 'inv_costs_p'] = 0 # Kosten für Leistung bereits in Process  Solar (dez.) und Gaskssel (Solar)enthalten
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar (dez.)'), 'fix_costs_p'] = 0  # Kosten für Leistung bereits in Process Solar (dez.) und Gaskssel (Solar) enthalten
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar (dez.)'), 'inv_costs_c'] = inv_costs_e
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'inv_costs_p'] = 0 # Kosten für Leistung bereits in Process  Solar (dez.) und Gaskssel (Solar)enthalten
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'fix_costs_p'] = 0  # Kosten für Leistung bereits in Process Solar (dez.) und Gaskssel (Solar) enthalten
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'inv_costs_c'] = inv_costs_e
 
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme GWWP'), 'inv_costs_p'] = 0  # Kosten für Leistung bereits in Process  GWWP und Gaskssel (GWWP)enthalten
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme GWWP'), 'fix_costs_p'] = 0  # Kosten für Leistung bereits in Process GWWP und Gaskssel (GWWP)enthalten
@@ -214,9 +221,9 @@ def scenario_base(data):
 
     inv_costs_p, fix_costs_p, inv_costs_e = Puffer_zentr(year=year)
 
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H (zentr.)'), 'inv_costs_p'] = inv_costs_p
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H (zentr.)'), 'fix_costs_p'] = fix_costs_p
-    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H (zentr.)'), 'inv_costs_c'] = inv_costs_e
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'inv_costs_p'] = inv_costs_p
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'fix_costs_p'] = fix_costs_p
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'inv_costs_c'] = inv_costs_e
 
 
     inv_costs_p, fix_costs_p, inv_costs_e = Batterie(year=year)
@@ -228,8 +235,8 @@ def scenario_base(data):
 
     inv_costs_p, fix_costs_p = Waermenetz(year=year)
 
-    sto.loc[('Augsburg', 'Batterie', 'Fernwaerme'), 'inv_costs_p'] = inv_costs_p
-    sto.loc[('Augsburg', 'Batterie', 'Fernwaerme'), 'fix_costs_p'] = fix_costs_p
+    sto.loc[('Augsburg', 'Waermenetz', 'Fernwaerme'), 'inv_costs_p'] = inv_costs_p
+    sto.loc[('Augsburg', 'Waermenetz', 'Fernwaerme'), 'fix_costs_p'] = fix_costs_p
 
 
 
@@ -300,7 +307,7 @@ def setup_solver(optim, logfile='solver.log'):
         # http://www.gurobi.com/documentation/5.6/reference-manual/parameters
         optim.set_options("logfile={}".format(logfile))
         optim.set_options("timelimit=7200")  # seconds
-        optim.set_options("mipgap=10e-4")  # default = 1e-4
+        optim.set_options("mipgap=1e-4")  # default = 1e-4
     elif optim.name == 'glpk':
         # reference with list of options
         # execute 'glpsol --help'
@@ -520,7 +527,7 @@ def P2H_dez(year):
     return inv_costs, fix_costs
 
 if __name__ == '__main__':
-    input_file = 'Augsburgdevel.xlsx'
+    input_file = 'Augsburg.xlsx'
     result_name = os.path.splitext(input_file)[0]  # cut away file extension
     result_dir = prepare_result_directory(result_name)  # name + time stamp
     runme = 'runme.py'
@@ -531,32 +538,33 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (1, 20)  # time step selection
+    (offset, length) = (1, 500)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites
     plot_tuples = [
-        #('Augsburg', 'Elec'),
-        #('Augsburg', 'Fernwaerme'),
-        #('Augsburg', 'Waerme (dez.)'),
-        #('Augsburg', 'Solar (dez.)'),
-        #('Augsburg', 'GWWP'),
-        #('Augsburg', 'P2H (zentr.)'),
-        #('Augsburg', 'Elec (PV)'),
-        #('Augsburg', 'P2H (dez.)'),
+        ('Augsburg', 'Elec'),
+        ('Augsburg', 'Fernwaerme'),
+        ('Augsburg', 'Waerme dez'),
+        ('Augsburg', 'Waerme Solar dez'),
+        ('Augsburg', 'Waerme GWWP'),
+        ('Augsburg', 'Waerme P2H zentr'),
+        ('Augsburg', 'Elec PV'),
+        ('Augsburg', 'Waerme P2H dez'),
         ]
 
     # detailed reporting commodity/sites
     report_tuples = [
-        #('Augsburg', 'Elec'),
-        #'Augsburg', 'Fernwaerme'),
-        #('Augsburg', 'Waerme (dez.)'),
-        #('Augsburg', 'Waerme Solar (dez.)'),
-        #('Augsburg', 'Waerme GWWP'),
-        #('Augsburg', 'Waerme P2H (zentr.)'),
-        #('Augsburg', 'Elec (PV)'),
-        #('Augsburg', 'Waerme P2H (dez.)'),
-        #('Augsburg', 'CO2')
+        ('Augsburg', 'Elec'),
+        ('Augsburg', 'Fernwaerme'),
+        ('Augsburg', 'Waerme dez'),
+        ('Augsburg', 'Waerme Solar dez'),
+
+        ('Augsburg', 'Waerme GWWP'),
+        ('Augsburg', 'Waerme P2H zentr'),
+        ('Augsburg', 'Elec PV'),
+        ('Augsburg', 'Waerme P2H dez'),
+        ('Augsburg', 'CO2')
         ]
 
     # plotting timesteps
@@ -573,8 +581,8 @@ if __name__ == '__main__':
 
     # select scenarios to be run
     scenarios = [
-        #scenario_base]
-        scenario_stock_prices]
+        scenario_base]
+        #scenario_stock_prices]
         #scenario_co2_limit,
         #scenario_co2_tax_mid,
         #scenario_no_dsm,
