@@ -152,14 +152,6 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'Gaskessel PV'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'inst-cap'] = (4/0.7) #Deckungsgrad GWWP 70%
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'cap-up'] = (4/0.7)
-
-    inv_costs, fix_costs = Gaskessel(year=year)
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'fix-cost'] = fix_costs
-
-
     pro.loc[('Augsburg', 'Gaskessel Solar'), 'inst-cap'] = (6/0.3) #Deckungsgrad GWWP 30%
     pro.loc[('Augsburg', 'Gaskessel Solar'), 'cap-up'] = (6/0.3)
 
@@ -385,12 +377,6 @@ def scenario_2017(data):
     pro.loc[('Augsburg', 'Gaskessel PV'), 'inv-cost'] = inv_costs
     pro.loc[('Augsburg', 'Gaskessel PV'), 'fix-cost'] = fix_costs
 
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'inst-cap'] = ((cpro.loc[('Augsburg', 'Gaskessel GWWP'),'Total'])* ((-dif+(pro.loc[('Augsburg', 'Gaskessel GWWP'), 'depreciation']))/(pro.loc[('Augsburg', 'Gaskessel GWWP'), 'depreciation'])))
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'cap-up'] = math.inf
-
-    inv_costs, fix_costs = Gaskessel(year=year)
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'inv-cost'] = inv_costs
-    pro.loc[('Augsburg', 'Gaskessel GWWP'), 'fix-cost'] = fix_costs
 
     pro.loc[('Augsburg', 'Gaskessel Solar'), 'inst-cap'] = ((cpro.loc[('Augsburg', 'Gaskessel Solar'),'Total'])* ((-dif+(pro.loc[('Augsburg', 'Gaskessel Solar'), 'depreciation']))/(pro.loc[('Augsburg', 'Gaskessel Solar'), 'depreciation'])))
     pro.loc[('Augsburg', 'Gaskessel Solar'), 'cap-up'] = math.inf
