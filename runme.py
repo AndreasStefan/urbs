@@ -784,7 +784,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (0, 8760)  # time step selection
+    (offset, length) = (0, 4000)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites

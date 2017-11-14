@@ -2,9 +2,11 @@ import pyomo.environ
 import urbs
 from pyomo.core import Constraint
 from pyomo.opt.base import SolverFactory
-
+import runme
 data = urbs.read_excel('Augsburg.xlsx')
-prob = urbs.create_model(data, timesteps=range(0, 8760), dual=True)
+
+data = urbs.runme.scenario_base(data)
+prob = urbs.create_model(data, timesteps=range(0, 100), dual=True)
 
 optim = SolverFactory('gurobi')
 result = optim.solve(prob, tee=True)
