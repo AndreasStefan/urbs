@@ -520,7 +520,7 @@ def P2H_dez(year):
     return inv_costs, fix_costs
 
 if __name__ == '__main__':
-    input_file = 'Augsburg.xlsx'
+    input_file = 'Augsburgdevel.xlsx'
     result_name = os.path.splitext(input_file)[0]  # cut away file extension
     result_dir = prepare_result_directory(result_name)  # name + time stamp
     runme = 'runme.py'
@@ -536,27 +536,27 @@ if __name__ == '__main__':
 
     # plotting commodities/sites
     plot_tuples = [
-        ('Augsburg', 'Elec'),
-        ('Augsburg', 'Fernwaerme'),
-        ('Augsburg', 'Waerme (dez.)'),
-        ('Augsburg', 'Solar (dez.)'),
-        ('Augsburg', 'GWWP'),
-        ('Augsburg', 'P2H (zentr.)'),
-        ('Augsburg', 'Elec (PV)'),
-        ('Augsburg', 'P2H (dez.)'),
+        #('Augsburg', 'Elec'),
+        #('Augsburg', 'Fernwaerme'),
+        #('Augsburg', 'Waerme (dez.)'),
+        #('Augsburg', 'Solar (dez.)'),
+        #('Augsburg', 'GWWP'),
+        #('Augsburg', 'P2H (zentr.)'),
+        #('Augsburg', 'Elec (PV)'),
+        #('Augsburg', 'P2H (dez.)'),
         ]
 
     # detailed reporting commodity/sites
     report_tuples = [
-        ('Augsburg', 'Elec'),
-        ('Augsburg', 'Fernwaerme'),
-        ('Augsburg', 'Waerme (dez.)'),
-        ('Augsburg', 'Waerme Solar (dez.)'),
-        ('Augsburg', 'Waerme GWWP'),
-        ('Augsburg', 'Waerme P2H (zentr.)'),
-        ('Augsburg', 'Elec (PV)'),
-        ('Augsburg', 'Waerme P2H (dez.)'),
-        ('Augsburg', 'CO2')
+        #('Augsburg', 'Elec'),
+        #'Augsburg', 'Fernwaerme'),
+        #('Augsburg', 'Waerme (dez.)'),
+        #('Augsburg', 'Waerme Solar (dez.)'),
+        #('Augsburg', 'Waerme GWWP'),
+        #('Augsburg', 'Waerme P2H (zentr.)'),
+        #('Augsburg', 'Elec (PV)'),
+        #('Augsburg', 'Waerme P2H (dez.)'),
+        #('Augsburg', 'CO2')
         ]
 
     # plotting timesteps
@@ -573,8 +573,8 @@ if __name__ == '__main__':
 
     # select scenarios to be run
     scenarios = [
-        scenario_base]
-        #scenario_stock_prices,
+        #scenario_base]
+        scenario_stock_prices]
         #scenario_co2_limit,
         #scenario_co2_tax_mid,
         #scenario_no_dsm,
