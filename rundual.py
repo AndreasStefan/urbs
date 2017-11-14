@@ -3,10 +3,10 @@ import urbs
 from pyomo.core import Constraint
 from pyomo.opt.base import SolverFactory
 
-data = urbs.read_excel('mimo-example.xlsx')
-prob = urbs.create_model(data, timesteps=range(1, 8), dual=True)
+data = urbs.read_excel('Augsburg.xlsx')
+prob = urbs.create_model(data, timesteps=range(0, 8760), dual=True)
 
-optim = SolverFactory('glpk')
+optim = SolverFactory('gurobi')
 result = optim.solve(prob, tee=True)
 
 res_vertex_duals = urbs.get_entity(prob, 'res_vertex')
