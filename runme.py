@@ -536,19 +536,27 @@ if __name__ == '__main__':
     # plotting commodities/sites
     plot_tuples = [
         ('Augsburg', 'Elec'),
-        ('Augsburg', 'Nahwaerme'),
-        ('Augsburg', 'Waerme dezentral'),
-        ('Augsburg', 'HG W_PV'),
-        ('Augsburg', 'HG W_Solar'),
-        ('Augsburg', 'HG W_GWWP'),
-        ('Augsburg', 'HG S_PV'),
-        ('Augsburg', 'HG P2H_SP')
-        ]
+        ('Augsburg', 'Fernwaerme'),
+        ('Augsburg', 'Waerme (dez.)'),
+        ('Augsburg', 'Solar (dez.)'),
+        ('Augsburg', 'GWWP'),
+        ('Augsburg', 'P2H (zentr.)'),
+        ('Augsburg', 'Elec (PV)'),
+        ('Augsburg', 'P2H (dez.)')
+        ('Augsburg', 'CO2')]
 
     # detailed reporting commodity/sites
     report_tuples = [
-        ('Augsburg', 'Elec'), ('Augsburg', 'Nahwaerme'), ('Augsburg', 'Waerme dezentral'),
-        ('Augsburg', 'CO2'), ('Augsburg', 'HG W_PV'),('Augsburg', 'HG W_GWWP'),('Augsburg', 'HG W_Solar'),('Augsburg', 'HG S_PV'),('Augsburg', 'HG P2H_SP')]
+        ('Augsburg', 'Elec'),
+        ('Augsburg', 'Fernwaerme'),
+        ('Augsburg', 'Waerme (dez.)'),
+        ('Augsburg', 'Solar (dez.)'),
+        ('Augsburg', 'GWWP'),
+        ('Augsburg', 'P2H (zentr.)'),
+        ('Augsburg', 'Elec (PV)'),
+        ('Augsburg', 'P2H (dez.)'),
+        ('Augsburg', 'CO2')
+        ]
 
     # plotting timesteps
     plot_periods = {
