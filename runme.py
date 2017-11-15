@@ -8,6 +8,7 @@ from datetime import datetime
 from pyomo.opt.base import SolverFactory
 import xlrd
 from xlrd import XLRDError
+from comp import get_most_recent_entry
 
 # SCENARIOS
 def scenario_base(data):
@@ -238,18 +239,18 @@ def scenario_base(data):
 
 def scenario_2017(data):
     global_prop = data['global_prop']
-    global_prop.loc['CO2 limit', 'value'] = 1000000
+    global_prop.loc['CO2 limit', 'value'] = math.inf
 
 
 
-    year = 2050
+    year = 2017
     dif=0
-    file= 'result/Augsburg-20171114T2323/scenario_base.xlsx'
-
-
+    dir= get_most_recent_entry('result')
+    file= '{}\scenario_base.xlsx'.format(dir)
+    print(file)
     xls = pd.ExcelFile(file)  # read resultfile
     cpro = xls.parse('Process caps', index_col=[0, 1])
-
+    csto = xls.parse('Storage caps', index_col=[0, 1, 2])
 
     pro = data['process']
 
@@ -260,8 +261,8 @@ def scenario_2017(data):
     pro.loc[('Augsburg', 'Wind'), 'inv-cost'] = inv_costs
     pro.loc[('Augsburg', 'Wind'), 'fix-cost'] = fix_costs
 
-    pro.loc[('Augsburg', 'PV Freiflaeche'), 'inst-cap'] = 0
-    pro.loc[('Augsburg', 'PV Freiflaeche'), 'cap-up'] = math.inf
+    pro.loc[('Augsburg', 'PV Freiflaeche'), 'inst-cap'] = (cpro.loc[('Augsburg', 'PV Freiflaeche'),'Total'])
+    pro.loc[('Augsburg', 'PV Freiflaeche'), 'cap-up'] = 32.85 #https://stadtplanung.augsburg.de/fileadmin/user_upload/portale/stadtplanung/Stadtentwicklung/Solarkonzept/pdf/Solarkonzept.pdf
 
     inv_costs, fix_costs = PV_Freiflaeche(year=year)
     pro.loc[('Augsburg', 'PV Freiflaeche'), 'inv-cost'] = inv_costs
@@ -284,35 +285,34 @@ def scenario_2017(data):
 
     pro.loc[('Augsburg', 'Gasturbine'), 'inst-cap'] = (
     100 * 0.3)  # Richter, Stephan (2004): Entwicklung einer Methode zur integralen Beschreibung und Optimierung urbaner Energiesysteme. Erste Anwendung am Beispiel Augsburg. Dissertation. Universität Augsburg, Augsburg. Online verfügbar unter opus.bibliothek.uni-augsburg.de, zuletzt geprüft am 13.03.2017.
-    pro.loc[('Augsburg', 'Gasturbine'), 'cap-up'] = math.inf
+    pro.loc[('Augsburg', 'Gasturbine'), 'cap-up'] = (100 * 0.3)
 
     inv_costs, fix_costs = Gasturbine(year=year)
     pro.loc[('Augsburg', 'Gasturbine'), 'inv-cost'] = inv_costs
     pro.loc[('Augsburg', 'Gasturbine'), 'fix-cost'] = fix_costs
 
     pro.loc[('Augsburg', 'GuD'), 'inst-cap'] = (299.5 * 0.184)  # Richter, Stephan (2004)
-    pro.loc[('Augsburg', 'GuD'), 'cap-up'] = math.inf
+    pro.loc[('Augsburg', 'GuD'), 'cap-up'] = (299.5 * 0.184)
 
     inv_costs, fix_costs = GuD(year=year)
     pro.loc[('Augsburg', 'GuD'), 'inv-cost'] = inv_costs
     pro.loc[('Augsburg', 'GuD'), 'fix-cost'] = fix_costs
 
     pro.loc[('Augsburg', 'Heizwerk'), 'inst-cap'] = (99 * 0.94)  # Richter, Stephan (2004)
-    pro.loc[('Augsburg', 'Heizwerk'), 'cap-up'] = math.inf
+    pro.loc[('Augsburg', 'Heizwerk'), 'cap-up'] = (99 * 0.94)
 
     inv_costs, fix_costs = Heizwerk(year=year)
     pro.loc[('Augsburg', 'Heizwerk'), 'inv-cost'] = inv_costs
     pro.loc[('Augsburg', 'Heizwerk'), 'fix-cost'] = fix_costs
 
-    pro.loc[('Augsburg', 'Biogas KWK'), 'inst-cap'] = 0
+    pro.loc[('Augsburg', 'Biogas KWK'), 'inst-cap'] = ((cpro.loc[('Augsburg', 'Biogas KWK'),'Total']))
     pro.loc[('Augsburg', 'Biogas KWK'), 'cap-up'] = math.inf
 
     inv_costs, fix_costs = Biogas_KWK(year=year)
     pro.loc[('Augsburg', 'Biogas KWK'), 'inv-cost'] = inv_costs
     pro.loc[('Augsburg', 'Biogas KWK'), 'fix-cost'] = fix_costs
 
-    pro.loc[('Augsburg', 'Biogas Aufbereitung'), 'inst-cap'] = (
-    34618 / 8000)  # https://www.ava-augsburg.de/die-ava/zahlen-fakten/  Annahme 8000 VLS
+    pro.loc[('Augsburg', 'Biogas Aufbereitung'), 'inst-cap'] = ((cpro.loc[('Augsburg', 'Biogas Aufbereitung'),'Total'])) # https://www.ava-augsburg.de/die-ava/zahlen-fakten/  Annahme 8000 VLS
     pro.loc[('Augsburg', 'Biogas Aufbereitung'), 'cap-up'] = math.inf
 
     inv_costs, fix_costs = Biogas_Aufbereitung(year=year)
@@ -320,7 +320,7 @@ def scenario_2017(data):
     pro.loc[('Augsburg', 'Biogas Aufbereitung'), 'fix-cost'] = fix_costs
 
     pro.loc[('Augsburg', 'Abfall KWK'), 'inst-cap'] = (34 * 0.25)  # Richter, Stephan (2004)
-    pro.loc[('Augsburg', 'Abfall KWK'), 'cap-up'] = math.inf
+    pro.loc[('Augsburg', 'Abfall KWK'), 'cap-up'] = (34 * 0.25)
 
     inv_costs, fix_costs = Abfall_KWK(year=year)
     pro.loc[('Augsburg', 'Abfall KWK'), 'inv-cost'] = inv_costs
@@ -335,14 +335,14 @@ def scenario_2017(data):
     pro.loc[('Augsburg', 'Solar dez'), 'fix-cost'] = fix_costs
 
     pro.loc[('Augsburg', 'Solar zentr'), 'inst-cap'] = 0
-    pro.loc[('Augsburg', 'Solar zentr'), 'cap-up'] = math.inf
+    pro.loc[('Augsburg', 'Solar zentr'), 'cap-up'] = 109.5
 
     inv_costs, fix_costs = Solar_zentr(year=year)
     pro.loc[('Augsburg', 'Solar zentr'), 'inv-cost'] = inv_costs
     pro.loc[('Augsburg', 'Solar zentr'), 'fix-cost'] = fix_costs
 
     pro.loc[('Augsburg',
-             'Biomasse KWK'), 'inst-cap'] = 7.66  # https://www.kraftanlagen.com/projekte/biomasseheizkraftwerk-augsburg/
+             'Biomasse KWK'), 'inst-cap'] = ((cpro.loc[('Augsburg', 'Biomasse KWK'),'Total']))
     pro.loc[('Augsburg', 'Biomasse KWK'), 'cap-up'] = math.inf
 
     inv_costs, fix_costs = Biomasse_KWK(year=year)
@@ -387,7 +387,7 @@ def scenario_2017(data):
 
     pro.loc[('Augsburg',
              'GWWP'), 'inst-cap'] = ((cpro.loc[('Augsburg', 'GWWP'),'Total'])* ((-dif+(pro.loc[('Augsburg', 'GWWP'), 'depreciation']))/(pro.loc[('Augsburg', 'GWWP'), 'depreciation'])))
-    pro.loc[('Augsburg', 'GWWP'), 'cap-up'] = math.inf
+    pro.loc[('Augsburg', 'GWWP'), 'cap-up'] = 264.525
 
     inv_costs, fix_costs = GWWP(year=year)
     pro.loc[('Augsburg', 'GWWP'), 'inv-cost'] = inv_costs
@@ -427,11 +427,32 @@ def scenario_2017(data):
              'Waerme P2H dez'), 'fix_costs_p'] = 0  # Kosten für Heizschwert bereits in Process P2H (dez.) und Gaskssel (PV)enthalten
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'inv_costs_c'] = inv_costs_e
 
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'inst-cap-c'] = ((cpro.loc[('Augsburg', 'P2H dez'),'Total'])* ((-dif+(pro.loc[('Augsburg', 'P2H dez'), 'depreciation']))/(pro.loc[('Augsburg', 'P2H dez'), 'depreciation'])))
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'inst-cap-p'] = ((cpro.loc[('Augsburg', 'P2H dez'),'Total'])* ((-dif+(pro.loc[('Augsburg', 'P2H dez'), 'depreciation']))/(pro.loc[('Augsburg', 'P2H dez'), 'depreciation'])))
+
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'cap-up-c'] = math.inf
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H dez'), 'cap-up-p'] = math.inf
+
+
+
+
+
     sto.loc[('Augsburg', 'Pufferspeicher',
              'Waerme Solar dez'), 'inv_costs_p'] = 0  # Kosten für Leistung bereits in Process  Solar (dez.) und Gaskssel (Solar)enthalten
     sto.loc[('Augsburg', 'Pufferspeicher',
              'Waerme Solar dez'), 'fix_costs_p'] = 0  # Kosten für Leistung bereits in Process Solar (dez.) und Gaskssel (Solar) enthalten
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'inv_costs_c'] = inv_costs_e
+
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'inst-cap-c'] = (
+    (cpro.loc[('Augsburg', 'Solar dez'), 'Total']) * (
+    (-dif + (pro.loc[('Augsburg', 'Solar dez'), 'depreciation'])) / (pro.loc[('Augsburg', 'Solar dez'), 'depreciation'])))
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'inst-cap-p'] = (
+    (cpro.loc[('Augsburg', 'Solar dez'), 'Total']) * (
+    (-dif + (pro.loc[('Augsburg', 'Solar dez'), 'depreciation'])) / (pro.loc[('Augsburg', 'Solar dez'), 'depreciation'])))
+
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'cap-up-c'] = math.inf
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme Solar dez'), 'cap-up-p'] = math.inf
+
 
     sto.loc[('Augsburg', 'Pufferspeicher',
              'Waerme GWWP'), 'inv_costs_p'] = 0  # Kosten für Leistung bereits in Process  GWWP und Gaskssel (GWWP)enthalten
@@ -439,11 +460,32 @@ def scenario_2017(data):
              'Waerme GWWP'), 'fix_costs_p'] = 0  # Kosten für Leistung bereits in Process GWWP und Gaskssel (GWWP)enthalten
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme GWWP'), 'inv_costs_c'] = inv_costs_e
 
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme GWWP'), 'inst-cap-c'] = (
+        (cpro.loc[('Augsburg', 'GWWP'), 'Total']) * (
+            (-dif + (pro.loc[('Augsburg', 'GWWP'), 'depreciation'])) / (
+            pro.loc[('Augsburg', 'GWWP'), 'depreciation'])))
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme GWWP'), 'inst-cap-p'] = (
+        (cpro.loc[('Augsburg', 'GWWP'), 'Total']) * (
+            (-dif + (pro.loc[('Augsburg', 'GWWP'), 'depreciation'])) / (
+            pro.loc[('Augsburg', 'GWWP'), 'depreciation'])))
+
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme GWWP'), 'cap-up-c'] = math.inf
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme GWWP'), 'cap-up-p'] = math.inf
+
+
     inv_costs_p, fix_costs_p, inv_costs_e = Puffer_zentr(year=year)
 
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'inv_costs_p'] = inv_costs_p
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'fix_costs_p'] = fix_costs_p
     sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'inv_costs_c'] = inv_costs_e
+
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'inst-cap-c'] = csto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'C Total']
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'inst-cap-p'] = csto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'P Total']
+
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'cap-up-c'] = math.inf
+    sto.loc[('Augsburg', 'Pufferspeicher', 'Waerme P2H zentr'), 'cap-up-p'] = math.inf
+
+
 
 
     inv_costs_p, fix_costs_p, inv_costs_e = Batterie(year=year)
@@ -452,10 +494,10 @@ def scenario_2017(data):
     sto.loc[('Augsburg', 'Batterie', 'Elec'), 'fix_costs_p'] = fix_costs_p
     sto.loc[('Augsburg', 'Batterie', 'Elec'), 'inv_costs_c'] = inv_costs_e
 
-    sto.loc[('Augsburg', 'Batterie', 'Elec'), 'inst-cap-c'] = 0
-    sto.loc[('Augsburg', 'Batterie', 'Elec'), 'inst-cap-p'] = 0
+    sto.loc[('Augsburg', 'Batterie', 'Elec'), 'inst-cap-c'] = (csto.loc[('Augsburg', 'Batterie', 'Elec'), 'C Total'])*((10-dif)/10)
+    sto.loc[('Augsburg', 'Batterie', 'Elec'), 'inst-cap-p'] = (csto.loc[('Augsburg', 'Batterie', 'Elec'), 'P Total'])*((10-dif)/10)
 
-    sto.loc[('Augsburg', 'Batterie', 'Elec'), 'cap-up-c'] = math.inf
+    sto.loc[('Augsburg', 'Batterie', 'Elec'), 'cap-up-c'] = 180 # ca 1 kwh pro person
     sto.loc[('Augsburg', 'Batterie', 'Elec'), 'cap-up-p'] = math.inf
 
     inv_costs_p, fix_costs_p = Waermenetz(year=year)
@@ -742,7 +784,7 @@ def Puffer_zentr(year):
 
     inv_costs_p = (200000) * (year **(0))
     fix_costs_p = inv_costs_p * (1/ 100)
-    inv_costs_e = (3869) * (year **(0))
+    inv_costs_e = (21500) * (year **(0))
 
 
     return inv_costs_p, fix_costs_p,inv_costs_e
@@ -751,7 +793,7 @@ def Puffer_dez(year):
 
     inv_costs_p = (150000) * (year **(0))
     fix_costs_p = inv_costs_p * (1/ 100)
-    inv_costs_e = (42992) * (year **(0))
+    inv_costs_e = (129000) * (year **(0)) #https://www.ffe.de/publikationen/veroeffentlichungen/659-kostenanalyse-waermespeicher-bis-10-000-l-speichergroesse
 
     return inv_costs_p, fix_costs_p,inv_costs_e
 
@@ -818,8 +860,8 @@ if __name__ == '__main__':
 
     # select scenarios to be run
     scenarios = [
-        scenario_base]
-        #scenario_2017]
+        scenario_base,
+        scenario_2017]
         #scenario_co2_limit,
         #scenario_co2_tax_mid,
         #scenario_no_dsm,
