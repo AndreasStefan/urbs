@@ -120,8 +120,8 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'Biomasse KWK'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'Oelkessel'), 'inst-cap'] = 271 # Richter, Stephan (2004) 29% Wäremenachfrage wird gedeckt
-    pro.loc[('Augsburg', 'Oelkessel'), 'cap-up'] = 271
+    pro.loc[('Augsburg', 'Oelkessel'), 'inst-cap'] = 264 # Richter, Stephan (2004) 29% Wäremenachfrage wird gedeckt
+    pro.loc[('Augsburg', 'Oelkessel'), 'cap-up'] = 264
 
     inv_costs, fix_costs = Oelkessel(year=year)
     pro.loc[('Augsburg', 'Oelkessel'), 'inv-cost'] = inv_costs
@@ -136,8 +136,8 @@ def scenario_base(data):
     pro.loc[('Augsburg', 'Holzkessel'), 'fix-cost'] = fix_costs
 
 
-    pro.loc[('Augsburg', 'Gaskessel'), 'inst-cap'] = 468 # Richter, Stephan (2004) 50% Wäremenachfrage wird gedeckt
-    pro.loc[('Augsburg', 'Gaskessel'), 'cap-up'] = 468
+    pro.loc[('Augsburg', 'Gaskessel'), 'inst-cap'] = 455 # Richter, Stephan (2004) 50% Wäremenachfrage wird gedeckt
+    pro.loc[('Augsburg', 'Gaskessel'), 'cap-up'] = 455
 
     inv_costs, fix_costs = Gaskessel(year=year)
     pro.loc[('Augsburg', 'Gaskessel'), 'inv-cost'] = inv_costs
@@ -242,7 +242,7 @@ def scenario_2017(data):
 
 
 
-    year = 2017
+    year = 2050
     dif=0
     file= 'result/Augsburg-20171114T2323/scenario_base.xlsx'
 
@@ -775,7 +775,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (0, 100)  # time step selection
+    (offset, length) = (0, 155)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites
@@ -818,8 +818,8 @@ if __name__ == '__main__':
 
     # select scenarios to be run
     scenarios = [
-        #scenario_base]
-        scenario_2017]
+        scenario_base]
+        #scenario_2017]
         #scenario_co2_limit,
         #scenario_co2_tax_mid,
         #scenario_no_dsm,
