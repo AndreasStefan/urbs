@@ -1,37 +1,50 @@
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os
-from urbs.urbs.saveload import load
+import urbs
+from urbs.saveload import load
+from comp import get_most_recent_entry
+from analyse import glob_result_files
+from analyse import plot_cap
 
-from urbs.analyse import plot_cap
-from urbs.analyse import glob_result_files
-from urbs.analyse import get_most_recent_entry
+
 
 
 
 
 directory = get_most_recent_entry('result')
-hdf5_file_names =  glob_result_files(directory)
+file_names, file_type =  glob_result_files(directory)
 
-for hdf5_file_name in hdf5_file_names:
+for file in file_names:
 
-    prob = load(hdf5_file_name)
+    if file_type == 'h5':
+        h5 = load(file)
+        xlsx = None
+    elif file_type == 'xlsx':
+        h5 = None
+        xlsx = file
+    # Can be modified
 
-    sit = 'Augsburg'
-    to_drop = []
-    plot_sto = True
+    sites = [None]
+    to_drop = ['Slack Waerme', 'Slack Fernwaerme', 'Feed-in','Purchase', 'P2H dez Waerme', 'GWWP Waerme','Solar dez Waerme', 'PV Einspeisung','P2H zentr Waerme']
+
+    #sites = [None,'Bayern']
+    #to_drop = ['Verbrennungsfzg','Slack Kraftwerk','Slack H2', 'Slack Fahrzeuge', 'Raffinerie-Benzin']
+    plot_sto = False
     plot_cpro = True
     xticks = 2
 
-    fig=plot_cap(prob=prob, sit=sit, to_drop=to_drop, plot_sto=plot_sto, xticks=xticks)
+    for sit in sites:
+        fig=plot_cap(prob=h5,resultfile=xlsx, sit=sit, to_drop=to_drop, plot_sto=plot_sto, xticks=xticks)
 
-    scenario_names = [os.path.basename(rf)  # drop folder names, keep filename
-                          .replace('_', ' ')  # replace _ with spaces
-                          .replace('.h5', '')  # drop file extension
-                          .replace('scenario ', '')  # drop 'scenario ' prefix
-                      for rf in hdf5_file_name]
+        scenario_names = os.path.basename(file)
+        scenario_names = scenario_names.replace('_', ' ',)
+        scenario_names = scenario_names.replace('.h5', '')
+        scenario_names = scenario_names.replace('.xlsx', '')
+        scenario_names = scenario_names.replace('scenario ', '')
 
-    for ext in ['png', 'pdf']:
-        fig.savefig('{}\scenario_base_{}.{}'.format(directory,sit, ext),
-                    bbox_inches='tight')
+
+        for ext in ['png', 'pdf']:
+            fig.savefig('{}\pro_caps_scenario_{}_{}.{}'.format(directory,scenario_names,sit, ext),
+                        bbox_inches='tight')
 

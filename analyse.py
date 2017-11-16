@@ -12,8 +12,18 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import matplotlib.ticker as tkr
 import os
-import pandas as pd
+import numpy as np
 import sys
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import os
+import sys
+import pandas as pd
+from urbs.saveload import load
+from comp import get_most_recent_entry
+from analyse import glob_result_files
+from analyse import plot_cap
+from urbs.input import split_columns
 
 COLOURS = {
     0: 'lightsteelblue',
@@ -240,6 +250,54 @@ def plot_cap(prob=None, resultfile=None, sit=None, fontsize=16, show=True, to_dr
     return fig
 
 def energy(resultfile=None):
+    cmap = plt.cm.prism
+    colors = cmap(np.linspace(0., 1., len(com_sums)))
+
+
+    resultfile = 'scenario_base_2020.xlsx'
+    xls = pd.ExcelFile(resultfile)  # read resultfile
+    com_sums = xls.parse('Commodity sums', index_col=[0, 1])
+    com_sums.columns = split_columns(com_sums.columns, '.')
+    sites = list(com_sums.columns.levels[0])
+    demands = list(com_sums.columns.levels[1])
+    cmap = plt.cm.prism
+    colors = cmap(np.linspace(0., 1., len(com_sums)))
+
+
+
+    com_sums_loc = {}
+    drop_zeros = []
+    for sit in sites:
+        for demand in demands:
+            drop_zeros = com_sums.loc[:, (sit, demand)]
+            drop_zeros = drop_zeros[drop_zeros > 1e-4]
+            com_sums_loc.update({(sit, demand): drop_zeros})
+
+    for sit in sites:
+        for demand in demands:
+
+            consumed = pd.DataFrame(com_sums_loc[sit, demand].loc['Consumed'])
+            try:
+                consumed = consumed.append(pd.DataFrame(com_sums_loc[sit, demand].loc['Export']))
+            except:
+                pass
+            produced = pd.DataFrame(com_sums_loc[sit, demand].loc['Created'])
+            try:
+                produced = produced.append(pd.DataFrame(com_sums_loc[sit, demand].loc['Import']))
+            except:
+                pass
+
+            print(consumed)
+            fig1, ax1 = plt.subplots()
+            labels = consumed.index
+            plt.pie(consumed, explode=None, colors=None, labels=None, autopct=my_autopct, shadow=False, pctdistance=0.8,
+                    startangle=90)
+            ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+            ax1.legend(labels, loc='upper center', bbox_to_anchor=(1.01, 0.9))
+            plt.title(('{} {}').format(sit, demand))
+            plt.show()
+
+
 
 
     return
@@ -267,7 +325,8 @@ def glob_result_files(folder_name):
     return result_files, file_type
 
 
-
+def my_autopct(pct):
+    return ('%.0f' % pct) if pct > 10 else ''
 
 
 
