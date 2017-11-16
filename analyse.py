@@ -21,8 +21,7 @@ import sys
 import pandas as pd
 from urbs.saveload import load
 from comp import get_most_recent_entry
-from analyse import glob_result_files
-from analyse import plot_cap
+
 from urbs.input import split_columns
 
 COLOURS = {
@@ -301,6 +300,7 @@ def energy(resultfile=None):
 
 
     return
+
 def glob_result_files(folder_name):
     """ Glob hdf5 files from specified folder.
 

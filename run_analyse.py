@@ -11,7 +11,6 @@ from analyse import plot_cap
 
 
 
-
 directory = get_most_recent_entry('result')
 file_names, file_type =  glob_result_files(directory)
 
