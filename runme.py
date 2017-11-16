@@ -1824,7 +1824,7 @@ def run_scenario(input_file, timesteps, scenario, result_dir,
     result = optim.solve(prob, tee=True)
 
     # save problem solution (and input data) to HDF5 file
-    urbs.save(prob, os.path.join(result_dir, '{}.h5'.format(sce)))
+    #urbs.save(prob, os.path.join(result_dir, '{}.h5'.format(sce)))
 
     # write report to spreadsheet
     urbs.report(
@@ -2021,7 +2021,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (0, 8760)  # time step selection
+    (offset, length) = (0, 8)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites
@@ -2066,12 +2066,12 @@ if __name__ == '__main__':
 
     # select scenarios to be run
     scenarios = [
-        scenario_base,
-        scenario_2017,
-        scenario_2020,
-        scenario_2030,
-        scenario_2040,
-        scenario_2050
+        scenario_base
+        #scenario_2017,
+        #scenario_2020,
+        #scenario_2030,
+        #scenario_2040,
+        #scenario_2050
      ]
 
 

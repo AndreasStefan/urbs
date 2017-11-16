@@ -24,8 +24,8 @@ for file in file_names:
         h5 = None
         xlsx = file
     # Can be modified
-    sites = [None]
-    to_drop = ['Slack Elec','Slack Waerme','Slack Fernwaerme']
+    sites = [None,'Bayern']
+    to_drop = ['Verbrennungsfzg','Slack Kraftwerk','Slack H2', 'Slack Fahrzeuge', 'Raffinerie-Benzin']
     plot_sto = False
     plot_cpro = True
     xticks = 2
