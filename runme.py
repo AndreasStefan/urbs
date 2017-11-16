@@ -31,7 +31,7 @@ def get_most_recent_entry(search_dir):
 
 # SCENARIOS
 def scenario_base(data):
-
+    sce='base'
     year=2017
     '''
     with pd.ExcelFile('grenzkosten.xlsx') as xls:
@@ -270,7 +270,7 @@ def scenario_2017(data):
     global_prop = data['global_prop']
     global_prop.loc['CO2 limit', 'value'] = math.inf
 
-
+    sce = 'base'
 
     year = 2017
 
@@ -562,7 +562,7 @@ def scenario_2020(data):
     global_prop = data['global_prop']
     global_prop.loc['CO2 limit', 'value'] = math.inf
 
-
+    sce = 'base'
 
     year = 2020
 
@@ -850,7 +850,7 @@ def scenario_2030(data):
     global_prop = data['global_prop']
     global_prop.loc['CO2 limit', 'value'] = math.inf
 
-
+    sce = 'base'
 
     year = 2030
 
@@ -1140,7 +1140,7 @@ def scenario_2040(data):
     global_prop = data['global_prop']
     global_prop.loc['CO2 limit', 'value'] = math.inf
 
-
+    sce = 'base'
 
     year = 2040
 
@@ -1428,7 +1428,7 @@ def scenario_2050(data):
     global_prop = data['global_prop']
     global_prop.loc['CO2 limit', 'value'] = math.inf
 
-
+    sce = 'base'
 
     year = 2050
 
@@ -1824,7 +1824,7 @@ def run_scenario(input_file, timesteps, scenario, result_dir,
     result = optim.solve(prob, tee=True)
 
     # save problem solution (and input data) to HDF5 file
-    #urbs.save(prob, os.path.join(result_dir, '{}.h5'.format(sce)))
+    urbs.save(prob, os.path.join(result_dir, '{}.h5'.format(sce)))
 
     # write report to spreadsheet
     urbs.report(
@@ -2021,7 +2021,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (0, 1000)  # time step selection
+    (offset, length) = (0, 8760)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites

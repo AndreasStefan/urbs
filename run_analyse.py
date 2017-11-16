@@ -2,10 +2,10 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os
 import urbs
-from urbs.urbs.saveload import load
-from urbs.comp import get_most_recent_entry
-from urbs.analyse import glob_result_files
-from urbs.analyse import plot_cap
+from urbs.saveload import load
+from comp import get_most_recent_entry
+from analyse import glob_result_files
+from analyse import plot_cap
 
 
 
@@ -26,7 +26,7 @@ for file in file_names:
     # Can be modified
     sites = [None]
     to_drop = ['Slack Elec','Slack Waerme','Slack Fernwaerme']
-    plot_sto = True
+    plot_sto = False
     plot_cpro = True
     xticks = 2
 
