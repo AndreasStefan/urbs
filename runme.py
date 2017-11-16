@@ -4,15 +4,29 @@ import math
 import pyomo.environ
 import shutil
 import urbs
+import sys
 from datetime import datetime
 from pyomo.opt.base import SolverFactory
 import xlrd
 from xlrd import XLRDError
-from urbs.comp import get_most_recent_entry
-from urbs.urbs.input import split_columns
+import glob
+
+#from urbs.urbs.input import split_columns
 
 
+def get_most_recent_entry(search_dir):
+    """ Return most recently modified entry from given directory.
 
+    Args:
+        search_dir: an absolute or relative path to a directory
+
+    Returns:
+        The file/folder in search_dir that has the most recent 'modified'
+        datetime.
+    """
+    entries = glob.glob(os.path.join(search_dir, "*"))
+    entries.sort(key=lambda x: os.path.getmtime(x))
+    return entries[-1]
 
 
 # SCENARIOS
@@ -26,10 +40,10 @@ def scenario_base(data):
     costs.columns = split_columns(costs.columns, '.')
     data['buy_sell_price'] = pd.DataFrame(costs)
 
-
+    '''
     pro_co = data['process_commodity']
     pro_co.loc[('Purchase', 'Elec','Out'), 'CO2'] = CO_EM(year=year)
-    '''
+
     pro = data['process']
 
     pro.loc[('Augsburg', 'Wind'), 'inst-cap'] = 0
@@ -2007,7 +2021,7 @@ if __name__ == '__main__':
     shutil.copyfile(runme, os.path.join(result_dir, runme))
 
     # simulation timesteps
-    (offset, length) = (0, 20)  # time step selection
+    (offset, length) = (0, 1000)  # time step selection
     timesteps = range(offset, offset+length+1)
 
     # plotting commodities/sites
