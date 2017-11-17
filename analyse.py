@@ -2,26 +2,15 @@ import os
 import urbs
 from urbs.input import get_input
 from urbs.output import get_constants, get_timeseries
-from urbs.input import get_input
-from urbs.pyomoio import get_entity, get_entities
-from urbs.util import is_string
-from urbs.saveload import load
 import glob
 import math
 import matplotlib.gridspec as gridspec
-import matplotlib.pyplot as plt
 import matplotlib.ticker as tkr
-import os
 import numpy as np
-import sys
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os
-import sys
 import pandas as pd
-from urbs.saveload import load
-from comp import get_most_recent_entry
-
 from urbs.input import split_columns
 
 COLOURS = {
@@ -40,6 +29,11 @@ COLOURS = {
     12: 'blue',
     13: 'darkgreen'}
 
+font = {'family' : 'sans-serif',
+        'weight' : 'bold',
+        'size'   : 22}
+
+mpl.rc('font', **font)
 
 def plot_cap(prob=None, resultfile=None, sit=None, fontsize=16, show=True, to_drop=None, plot_sto=True, plot_cpro=True,
              xticks=None):
@@ -74,9 +68,7 @@ def plot_cap(prob=None, resultfile=None, sit=None, fontsize=16, show=True, to_dr
 
 
     """
-    import matplotlib.pyplot as plt
-    import matplotlib as mpl
-    import numpy as np
+
     plt.ion()
 
     ##Get Data and Prepare Data##
@@ -247,60 +239,309 @@ def plot_cap(prob=None, resultfile=None, sit=None, fontsize=16, show=True, to_dr
             plt.show()
 
     return fig
+def get_data(resultfile):
 
-def energy(resultfile=None):
-    cmap = plt.cm.prism
-    colors = cmap(np.linspace(0., 1., len(com_sums)))
-
-
-    resultfile = 'scenario_base_2020.xlsx'
+    #read excel resultfile
+    resultfile = resultfile
     xls = pd.ExcelFile(resultfile)  # read resultfile
     com_sums = xls.parse('Commodity sums', index_col=[0, 1])
     com_sums.columns = split_columns(com_sums.columns, '.')
+
+    #define colors
+    cmap = plt.cm.gist_ncar
+    colors_all = cmap(np.linspace(0., 2.5, len(com_sums)))
+
+    #get all sites and demands
     sites = list(com_sums.columns.levels[0])
     demands = list(com_sums.columns.levels[1])
-    cmap = plt.cm.prism
-    colors = cmap(np.linspace(0., 1., len(com_sums)))
 
-
-
+    #define all dicts
     com_sums_loc = {}
+    color_dict_consume = {}
+    color_dict_export = {}
+    color_dict_produce = {}
+    color_dict_import = {}
     drop_zeros = []
+    timeseries_dict = {}
+
+    produced_per_month = {}
+    consumed_per_month = {}
+    export_per_month = {}
+    import_per_month = {}
+    produced_per_week = {}
+    consumed_per_week = {}
+    export_per_week = {}
+    import_per_week = {}
+
+    #timesteps per month
+    jan = np.arange(1, 24 * 31 + 1, 1)
+    feb = np.arange(jan[-1] + 1, (24 * 28 + 1) + jan[-1], 1)
+    mar = np.arange(feb[-1] + 1, (24 * 31 + 1) + feb[-1], 1)
+    apr = np.arange(mar[-1] + 1, (24 * 30 + 1) + mar[-1], 1)
+    mai = np.arange(apr[-1] + 1, (24 * 31 + 1) + apr[-1], 1)
+    jun = np.arange(mai[-1] + 1, (24 * 30 + 1) + mai[-1], 1)
+    jul = np.arange(jun[-1] + 1, (24 * 31 + 1) + jun[-1], 1)
+    aug = np.arange(jul[-1] + 1, (24 * 31 + 1) + jul[-1], 1)
+    sep = np.arange(aug[-1] + 1, (24 * 30 + 1) + aug[-1], 1)
+    okt = np.arange(sep[-1] + 1, (24 * 31 + 1) + sep[-1], 1)
+    nov = np.arange(okt[-1] + 1, (24 * 30 + 1) + okt[-1], 1)
+    dez = np.arange(nov[-1] + 1, (24 * 31 + 1) + nov[-1], 1)
+
+    # timesteps per week
+    x1 = np.arange(1, 8737, 1)  # year has 52,14 weeks
+    x1 = np.split(x1, 52)
+
+    #read timeseries dat from excel sheet and prepare for plot
     for sit in sites:
         for demand in demands:
+            produced_per_month1 = pd.DataFrame()
+            consumed_per_month1 = pd.DataFrame()
+            export_per_month1 = pd.DataFrame()
+            import_per_month1 = pd.DataFrame()
+            produced_per_week1 = pd.DataFrame()
+            consumed_per_week1 = pd.DataFrame()
+            export_per_week1 = pd.DataFrame()
+            import_per_week1 = pd.DataFrame()
+            temp = []
+            color_dict_consume.update({(sit, demand): np.argwhere(com_sums.loc['Consumed', (sit, demand,)] > 1e-4)})
+            color_dict_produce.update({(sit, demand): np.argwhere(com_sums.loc['Created', (sit, demand,)] > 1e-4)})
+            timeseries_name = ('{}.{} timeseries'.format(sit, demand))
+            timeseries_name = timeseries_name[:31]
+            temp = pd.DataFrame(xls.parse(timeseries_name, header=[0, 1], index_col=[0]))
+            timeseries_dict.update({(sit, demand): temp})
+
+            for j, time in enumerate([jan, feb, mar, apr, mai, jun, jul, aug, sep, okt, nov, dez]):
+                temp_sum = []
+                temp_sum = temp.loc[time, 'Created'].sum()
+                produced_per_month1 = pd.concat(
+                    [produced_per_month1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                       columns=[[sit], [demand], [j]])], axis=1)
+
+                temp_sum = []
+                temp_sum = temp.loc[time, 'Consumed'].sum()
+                consumed_per_month1 = pd.concat(
+                    [consumed_per_month1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                       columns=[[sit], [demand], [j]])], axis=1)
+
+                try:
+                    temp_sum = []
+                    temp_sum = temp.loc[time, 'Import from'].sum()
+                    import_per_month1 = pd.concat(
+                        [import_per_month1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                         columns=[[sit], [demand], [j]])], axis=1)
+
+                except:
+                    pass
+
+                try:
+                    temp_sum = []
+                    temp_sum = temp.loc[time, 'Export to'].sum()
+                    export_per_month1 = pd.concat(
+                        [export_per_month1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                         columns=[[sit], [demand], [j]])], axis=1)
+
+
+                except:
+                    pass
+            produced_per_month.update({(sit, demand): pd.DataFrame(produced_per_month1)})
+            consumed_per_month.update({(sit, demand): pd.DataFrame(consumed_per_month1)})
+            export_per_month.update({(sit, demand): pd.DataFrame(export_per_month1)})
+            import_per_month.update({(sit, demand): pd.DataFrame(import_per_month1)})
+
+            for j, i in enumerate(np.arange(1, 53, 1)):
+                temp_sum = []
+                temp_sum = temp.loc[x1[j:j + 1][0], 'Created'].sum()
+                produced_per_week1 = pd.concat([produced_per_week1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                                                 columns=[[sit], [demand], [j]])],
+                                               axis=1)
+
+                temp_sum = []
+                temp_sum = temp.loc[x1[j:j + 1][0], 'Consumed'].sum()
+                consumed_per_week1 = pd.concat([consumed_per_week1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                                                 columns=[[sit], [demand], [j]])],
+                                               axis=1)
+
+                try:
+                    temp_sum = []
+                    temp_sum = temp.loc[x1[j:j + 1][0], 'Import from'].sum()
+                    import_per_week1 = pd.concat([import_per_week1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                                                 columns=[[sit], [demand], [j]])],
+                                                 axis=1)
+
+                except:
+                    pass
+
+                try:
+                    temp_sum = []
+                    temp_sum = temp.loc[x1[j:j + 1][0], 'Export to'].sum()
+                    export_per_week1 = pd.concat([export_per_week1, pd.DataFrame(temp_sum.values, index=temp_sum.index,
+                                                                                 columns=[[sit], [demand], [j]])],
+                                                 axis=1)
+
+                except:
+                    pass
+            produced_per_week.update({(sit, demand): pd.DataFrame(produced_per_week1)})
+            consumed_per_week.update({(sit, demand): pd.DataFrame(consumed_per_week1)})
+            export_per_week.update({(sit, demand): pd.DataFrame(export_per_week1)})
+            import_per_week.update({(sit, demand): pd.DataFrame(import_per_week1)})
+
+            try:
+                color_dict_export.update({(sit, demand): np.argwhere(com_sums.loc['Export', (sit, demand,)] > 1e-4)})
+            except:
+                pass
+            try:
+                color_dict_import.update({(sit, demand): np.argwhere(com_sums.loc['Import', (sit, demand,)] > 1e-4)})
+            except:
+                pass
+
             drop_zeros = com_sums.loc[:, (sit, demand)]
             drop_zeros = drop_zeros[drop_zeros > 1e-4]
             com_sums_loc.update({(sit, demand): drop_zeros})
 
+    return colors_all,sites,demands,color_dict_produce,color_dict_consume,color_dict_export,color_dict_import,produced_per_week,consumed_per_week,export_per_week,import_per_week,produced_per_month,consumed_per_month,export_per_month,import_per_month,com_sums_loc
+
+
+
+
+
+
+def energy_year(resultfile,typ='consumed'):
+    colors_all,sites, demands,color_dict_produce, color_dict_consume, color_dict_export, color_dict_import, produced_per_week, consumed_per_week, export_per_week, import_per_week, produced_per_month, consumed_per_month, export_per_month, import_per_month, com_sums_loc =get_data(resultfile=resultfile)
+
     for sit in sites:
         for demand in demands:
+            if typ == 'consumed':
+                dat = pd.DataFrame(com_sums_loc[sit, demand].loc['Consumed'])
+                color_dict = color_dict_consume
+                try:
+                    dat = dat.append(pd.DataFrame(com_sums_loc[sit, demand].loc['Export']))
+                    color_dict_extra = color_dict_export
+                except:
+                    pass
+            else:
+                dat = pd.DataFrame(com_sums_loc[sit, demand].loc['Created'])
+                color_dict = color_dict_produce
+                try:
+                    dat = dat.append(pd.DataFrame(com_sums_loc[sit, demand].loc['Import']))
+                    color_dict_extra = color_dict_import
+                except:
+                    pass
 
-            consumed = pd.DataFrame(com_sums_loc[sit, demand].loc['Consumed'])
+            color_array = colors_all[color_dict[sit, demand]]
             try:
-                consumed = consumed.append(pd.DataFrame(com_sums_loc[sit, demand].loc['Export']))
+                color_array_extra = colors_all[color_dict_extra[sit, demand]]
             except:
                 pass
-            produced = pd.DataFrame(com_sums_loc[sit, demand].loc['Created'])
             try:
-                produced = produced.append(pd.DataFrame(com_sums_loc[sit, demand].loc['Import']))
+                color_array = color_array.reshape((color_array.shape[0], -1))
+            except:
+                pass
+            try:
+                color_array_extra = color_array_extra.reshape((color_array_extra.shape[0], -1))
+            except:
+                pass
+            try:
+                color_array = np.concatenate((color_array, color_array_extra))
             except:
                 pass
 
-            print(consumed)
+
             fig1, ax1 = plt.subplots()
-            labels = consumed.index
-            plt.pie(consumed, explode=None, colors=None, labels=None, autopct=my_autopct, shadow=False, pctdistance=0.8,
-                    startangle=90)
+            labels = dat.index
+            plt.pie(dat, explode=None, colors=color_array, labels=None, autopct=my_autopct, shadow=False,
+                    pctdistance=0.8, startangle=90)
             ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
             ax1.legend(labels, loc='upper center', bbox_to_anchor=(1.01, 0.9))
             plt.title(('{} {}').format(sit, demand))
             plt.show()
-
-
-
-
     return
+def energy_month(resultfile,typ='consumed'):
+    colors_all, sites, demands, color_dict_produce, color_dict_consume, color_dict_export, color_dict_import, produced_per_week, consumed_per_week, export_per_week, import_per_week, produced_per_month, consumed_per_month, export_per_month, import_per_month, com_sums_loc = get_data(
+        resultfile=resultfile)
 
+    for sit in sites:
+        for demand in demands:
+            if demand == 'CO2' and typ =='consumed':
+                pass
+            else:
+                fig = plt.figure(figsize=(20, 8))
+                ax = plt.subplot()
+                if typ == 'consumed':
+                    try:
+                        frames = [
+                            pd.DataFrame(consumed_per_month[sit, demand][(consumed_per_month[sit, demand].T > 1e-4).any()]),
+                            pd.DataFrame(export_per_month[sit, demand][(export_per_month[sit, demand].T > 1e-4).any()])]
+
+                        to_plot = pd.concat(frames)
+                        color_array = colors_all[color_dict_consume[sit, demand]]
+                        color_array_extra = colors_all[color_dict_export[sit, demand]]
+                        color_array = np.concatenate((color_array, color_array_extra))
+
+                    except:
+                        to_plot = pd.DataFrame(
+                            consumed_per_month[sit, demand][(consumed_per_month[sit, demand].T > 1e-4).any()])
+                        color_array = colors_all[color_dict_produce[sit, demand]]
+
+                    try:
+                        color_array = color_array.reshape((color_array.shape[0], -1))
+                    except:
+                        pass
+                else:
+                    try:
+                        frames = [pd.DataFrame(
+                            produced_per_month[sit, demand][(produced_per_month[sit, demand].T > 1e-4).any()]),
+                                  pd.DataFrame(
+                                      import_per_month[sit, demand][(import_per_month[sit, demand].T > 1e-4).any()])]
+
+                        to_plot = pd.concat(frames)
+                        color_array = colors_all[color_dict_produce[sit, demand]]
+                        color_array_extra = colors_all[color_dict_import[sit, demand]]
+                        color_array = np.concatenate((color_array, color_array_extra))
+
+                    except:
+                        to_plot = pd.DataFrame(
+                            produced_per_month[sit, demand][(produced_per_month[sit, demand].T > 1e-4).any()])
+                        color_array = colors_all[color_dict_produce[sit, demand]]
+
+                    try:
+                        color_array = color_array.reshape((color_array.shape[0], -1))
+                    except:
+                        pass
+
+
+                labels = to_plot.index
+                bottom = np.zeros(len(to_plot[sit, demand].columns))
+                ind = np.arange(len(to_plot[sit, demand].columns))
+                width = 0.5
+                for elem, color in zip((to_plot.values), color_array):
+                    plt.bar(ind, elem / 1e3, width, bottom=bottom, color=color)
+                    bottom += elem / 1e3
+
+                ax.xaxis.grid(False)
+                ax.yaxis.grid(True, 'major', linestyle='-')
+
+                ax.yaxis.set_ticks_position('none')
+
+                # group 1,000,000 with commas
+                group_thousands = tkr.FuncFormatter(lambda x,
+                                                           pos: '{:0,d}'.format(int(x)))
+                ax.yaxis.set_major_formatter(group_thousands)
+                if demand == 'CO2':
+                    ax.set_ylabel('kt')
+                else:
+                    ax.set_ylabel('GWh')
+
+                ax.legend(labels, loc='upper center', bbox_to_anchor=(1.2, 0.9))
+                plt.xticks(ind, ('jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dez'))
+                plt.title('{} {} {}'.format(sit, demand,typ))
+                fig.tight_layout()
+                plt.show()
+
+
+
+
+
+    return fig
 def glob_result_files(folder_name):
     """ Glob hdf5 files from specified folder.
 
